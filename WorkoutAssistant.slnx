@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="WorkoutAssistant/WorkoutAssistant.csproj" />
+  <Project Path="WorkoutAssistant.Data/WorkoutAssistant.Data.csproj" Id="328f7a71-7b21-44d8-a53c-a1f1b6c8549a" />
+  <Project Path="WorkoutAssistant.Services.Core/WorkoutAssistant.Services.Core.csproj" Id="8e97d8bf-6ded-4a9f-a2e2-fe740881a79d" />
+  <Project Path="WorkoutAssistant.Shared/WorkoutAssistant.Shared.csproj" Id="fe2cd089-a0c9-4488-ac45-200c7a505583" />
+  <Project Path="WorkoutAssistant/WorkoutAssistant.Web.csproj" />
 </Solution>
