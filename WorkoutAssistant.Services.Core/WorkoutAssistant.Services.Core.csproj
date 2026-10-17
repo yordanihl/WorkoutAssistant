@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WorkoutAssistant.Data\WorkoutAssistant.Data.csproj" />
     <ProjectReference Include="..\WorkoutAssistant.Shared\WorkoutAssistant.Shared.csproj" />
   </ItemGroup>
