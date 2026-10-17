@@ -1,4 +1,4 @@
-namespace WorkoutAssistant.Models;
+namespace WorkoutAssistant.Web.ViewModels;
 
 public class ErrorViewModel
 {
