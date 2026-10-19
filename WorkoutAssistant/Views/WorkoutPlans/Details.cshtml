@@ -18,6 +18,7 @@
                     @(string.IsNullOrWhiteSpace(Model.Description) ? "No description provided." : Model.Description)
                 </p>
                 <a asp-action="Index" class="btn btn-outline-secondary">Back to workout plans</a>
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
             </div>
         </div>
     </div>

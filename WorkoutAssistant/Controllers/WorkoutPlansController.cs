@@ -65,5 +65,33 @@ namespace WorkoutAssistant.Web.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            WorkoutPlan? workoutPlan = dbContext.WorkoutPlans
+                .SingleOrDefault(p => p.Id == id);
+
+            if (workoutPlan == null)
+            {
+                return BadRequest();
+            }
+
+            return View(workoutPlan);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(WorkoutPlan workoutPlan)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(workoutPlan);
+            }
+
+            dbContext.Update(workoutPlan);
+            dbContext.SaveChanges();
+
+            return RedirectToAction(nameof(Details), new { id = workoutPlan.Id });
+        }
     }
 }
