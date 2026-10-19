@@ -18,6 +18,20 @@ namespace WorkoutAssistant.Web.Controllers
         }
 
         [HttpGet]
+        public IActionResult Details(int id)
+        {
+            WorkoutPlan? workoutPlan = dbContext.WorkoutPlans
+                .SingleOrDefault(p => p.Id == id);
+
+            if (workoutPlan == null)
+            {
+                return BadRequest();
+            }
+
+            return View(workoutPlan);
+        }
+
+        [HttpGet]
         public IActionResult Add()
         {
             WorkoutPlan workoutPlan = new WorkoutPlan();

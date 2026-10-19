@@ -24,6 +24,9 @@
                         <p class="card-text text-muted mb-0">
                             @(string.IsNullOrWhiteSpace(plan.Description) ? "No description provided." : plan.Description)
                         </p>
+                        <div>
+                            <a asp-action="Details" asp-route-id="@plan.Id" class="btn btn-primary">Details</a>
+                        </div>
                     </div>
                 </article>
             </div>
