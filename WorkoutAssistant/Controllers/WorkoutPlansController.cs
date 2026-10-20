@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WorkoutAssistant.Data;
 using WorkoutAssistant.Data.Models;
+using WorkoutAssistant.Web.InputModels;
+using WorkoutAssistant.Web.ViewModels;
 
 namespace WorkoutAssistant.Web.Controllers
 {
@@ -9,7 +11,13 @@ namespace WorkoutAssistant.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            IEnumerable<WorkoutPlan> workoutPlans = dbContext.WorkoutPlans
+            IEnumerable<WorkoutPlanViewModel> workoutPlans = dbContext.WorkoutPlans
+                .Select(p => new WorkoutPlanViewModel
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Description = p.Description
+                })
                 .OrderBy(p => p.Title)
                 .ThenBy(p => p.Id)
                 .ToList();
@@ -20,12 +28,18 @@ namespace WorkoutAssistant.Web.Controllers
         [HttpGet]
         public IActionResult Details(int id)
         {
-            WorkoutPlan? workoutPlan = dbContext.WorkoutPlans
+            WorkoutPlanViewModel? workoutPlan = dbContext.WorkoutPlans
+                .Select(p => new WorkoutPlanViewModel
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Description = p.Description
+                })
                 .SingleOrDefault(p => p.Id == id);
 
             if (workoutPlan == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             return View(workoutPlan);
@@ -34,13 +48,13 @@ namespace WorkoutAssistant.Web.Controllers
         [HttpGet]
         public IActionResult Add()
         {
-            WorkoutPlan workoutPlan = new WorkoutPlan();
+            WorkoutPlanAddInputModel workoutPlan = new WorkoutPlanAddInputModel();
 
             return View(workoutPlan);
         }
 
         [HttpPost]
-        public IActionResult Add(WorkoutPlan inputWorkoutPlan)
+        public IActionResult Add(WorkoutPlanAddInputModel inputWorkoutPlan)
         {
             if (!ModelState.IsValid)
             {
@@ -69,26 +83,38 @@ namespace WorkoutAssistant.Web.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            WorkoutPlan? workoutPlan = dbContext.WorkoutPlans
+            WorkoutPlanEditInputModel? workoutPlan = dbContext.WorkoutPlans
+                .Select(p => new WorkoutPlanEditInputModel
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Description= p.Description
+                })
                 .SingleOrDefault(p => p.Id == id);
 
             if (workoutPlan == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             return View(workoutPlan);
         }
 
         [HttpPost]
-        public IActionResult Edit(WorkoutPlan workoutPlan)
+        public IActionResult Edit(WorkoutPlanEditInputModel inputWorkoutPlan)
         {
             if (!ModelState.IsValid)
             {
-                return View(workoutPlan);
+                return View(inputWorkoutPlan);
             }
+            WorkoutPlan? workoutPlan = dbContext.WorkoutPlans.Find(inputWorkoutPlan.Id);
+            if (workoutPlan == null)
+            {
+                return BadRequest();
+            }
+            workoutPlan.Title = inputWorkoutPlan.Title;
+            workoutPlan.Description = inputWorkoutPlan.Description;
 
-            dbContext.Update(workoutPlan);
             dbContext.SaveChanges();
 
             return RedirectToAction(nameof(Details), new { id = workoutPlan.Id });
@@ -97,12 +123,18 @@ namespace WorkoutAssistant.Web.Controllers
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            WorkoutPlan? workoutPlan = dbContext.WorkoutPlans
+            WorkoutPlanViewModel? workoutPlan = dbContext.WorkoutPlans
+                .Select(p => new WorkoutPlanViewModel
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Description = p.Description
+                })
                 .SingleOrDefault(p => p.Id == id);
 
             if (workoutPlan == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             return View(workoutPlan);
