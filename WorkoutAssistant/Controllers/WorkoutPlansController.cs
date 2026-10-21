@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WorkoutAssistant.Data;
 using WorkoutAssistant.Data.Models;
 using WorkoutAssistant.Web.InputModels;
-using WorkoutAssistant.Web.ViewModels;
+using WorkoutAssistant.Web.ViewModels.Workout;
+using WorkoutAssistant.Web.ViewModels.WorkoutPlan;
 
 namespace WorkoutAssistant.Web.Controllers
 {
@@ -28,12 +30,22 @@ namespace WorkoutAssistant.Web.Controllers
         [HttpGet]
         public IActionResult Details(int id)
         {
-            WorkoutPlanViewModel? workoutPlan = dbContext.WorkoutPlans
-                .Select(p => new WorkoutPlanViewModel
+            WorkoutPlanDetailsViewModel? workoutPlan = dbContext.WorkoutPlans
+                .AsNoTracking()
+                .Where(p => p.Id == id)
+                .Select(p => new WorkoutPlanDetailsViewModel
                 {
                     Id = p.Id,
                     Title = p.Title,
-                    Description = p.Description
+                    Description = p.Description,
+                    Workouts = p.Workouts
+                        .OrderBy(w => w.OrderPosition)
+                        .Select(w => new WorkoutListViewModel
+                        {
+                            Id = w.Id,
+                            Name = w.Name
+                        })
+                        .ToList()
                 })
                 .SingleOrDefault(p => p.Id == id);
 
