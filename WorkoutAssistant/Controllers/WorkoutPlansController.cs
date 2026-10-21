@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using WorkoutAssistant.Data;
 using WorkoutAssistant.Data.Models;
 using WorkoutAssistant.Web.InputModels;
@@ -31,8 +30,6 @@ namespace WorkoutAssistant.Web.Controllers
         public IActionResult Details(int id)
         {
             WorkoutPlanDetailsViewModel? workoutPlan = dbContext.WorkoutPlans
-                .AsNoTracking()
-                .Where(p => p.Id == id)
                 .Select(p => new WorkoutPlanDetailsViewModel
                 {
                     Id = p.Id,
