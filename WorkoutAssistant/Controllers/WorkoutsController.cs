@@ -22,6 +22,7 @@ namespace WorkoutAssistant.Web.Controllers
                     .OrderBy(e  => e.Name)
                     .Select(e => new ExerciseViewModel
                     {
+                        Id = e.Id,
                         Name = e.Name
                     })
                     .ToList()

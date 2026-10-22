@@ -40,6 +40,12 @@
                         }
                     </ul>
                 }
+                <a asp-controller="Exercises"
+                   asp-action="Add"
+                   asp-route-workoutId="@Model.Id"
+                   class="btn btn-outline-primary mt-3">
+                    Add exercise
+                </a>
             </div>
         </div>
     </div>
