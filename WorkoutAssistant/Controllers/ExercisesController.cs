@@ -128,4 +128,49 @@ public class ExercisesController(AppDbContext dbContext) : Controller
 
         return RedirectToAction(nameof(Details), new { id = exercise.Id });
     }
+
+    [HttpGet]
+    public IActionResult Delete(int id)
+    {
+        ExerciseDetailsViewModel? exercise = dbContext.Exercises
+            .Select(e => new ExerciseDetailsViewModel
+            {
+                Id = e.Id,
+                Name = e.Name,
+                MuscleGroup = e.MuscleGroup,
+                Sets = e.Sets,
+                Reps = e.Reps,
+                RestSeconds = e.RestSeconds,
+                MediaUrl = e.MediaUrl,
+                WorkoutId = e.WorkoutId,
+                WorkoutName = e.Workout.Name
+            })
+            .SingleOrDefault(e => e.Id == id);
+
+        if (exercise == null)
+        {
+            return NotFound();
+        }
+
+        return View(exercise);
+    }
+
+    [HttpPost]
+    public IActionResult DeleteConfirmed(int id)
+    {
+        Exercise? exercise = dbContext.Exercises.SingleOrDefault(e => e.Id == id);
+        if (exercise == null)
+        {
+            return NotFound();
+        }
+
+        int workoutId = exercise.WorkoutId;
+        dbContext.Exercises.Remove(exercise);
+        dbContext.SaveChanges();
+
+        return RedirectToAction(
+            nameof(WorkoutsController.Details),
+            nameof(WorkoutsController)[..^10],
+            new { id = workoutId });
+    }
 }
