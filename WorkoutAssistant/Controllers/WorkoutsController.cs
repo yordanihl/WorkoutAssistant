@@ -1,13 +1,40 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using WorkoutAssistant.Data;
 using WorkoutAssistant.Data.Models;
 using WorkoutAssistant.Web.InputModels;
+using WorkoutAssistant.Web.ViewModels.Workout;
+using WorkoutAssistant.Web.ViewModels.Exercise;
 
 namespace WorkoutAssistant.Web.Controllers
 {
     public class WorkoutsController(AppDbContext dbContext) : Controller
     {
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            WorkoutDetailsViewModel? workout = dbContext.Workouts
+                .Select(w => new WorkoutDetailsViewModel
+                {
+                    Id = w.Id,
+                    Name = w.Name,
+                    PlanId = w.PlanId,
+                    Exercises = w.Exercises
+                    .OrderBy(e  => e.Name)
+                    .Select(e => new ExerciseViewModel
+                    {
+                        Name = e.Name
+                    })
+                    .ToList()
+                })
+                .SingleOrDefault(w => w.Id == id);
+            if (workout == null)
+            {
+                return NotFound();
+            }
+
+            return View(workout);
+        }
+
         [HttpGet]
         public IActionResult Add(int planId)
         {
