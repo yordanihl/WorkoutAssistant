@@ -116,5 +116,45 @@ namespace WorkoutAssistant.Web.Controllers
 
             return RedirectToAction(nameof(Details), new { id = workout.Id });
         }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            WorkoutListViewModel? workout = dbContext.Workouts
+                .Select(w => new WorkoutListViewModel
+                {
+                    Id = w.Id,
+                    Name = w.Name
+                })
+                .SingleOrDefault(w => w.Id == id);
+
+            if (workout == null)
+            {
+                return NotFound();
+            }
+
+            return View(workout);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            Workout? workout = dbContext.Workouts
+                .SingleOrDefault(w => w.Id == id);
+
+            if (workout == null)
+            {
+                return BadRequest();
+            }
+
+            int planId = workout.PlanId;
+            dbContext.Remove(workout);
+            dbContext.SaveChanges();
+
+            return RedirectToAction(
+                nameof(WorkoutPlansController.Details),
+                nameof(WorkoutPlansController)[..^10],
+                new { id = planId });
+        }
     }
 }
