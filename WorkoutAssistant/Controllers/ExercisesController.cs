@@ -77,4 +77,55 @@ public class ExercisesController(AppDbContext dbContext) : Controller
             nameof(WorkoutsController)[..^10],
             new { id = newExercise.WorkoutId });
     }
+
+    [HttpGet]
+    public IActionResult Edit(int id)
+    {
+        ExerciseEditInputModel? exercise = dbContext.Exercises
+            .Select(e => new ExerciseEditInputModel
+            {
+                Id = e.Id,
+                Name = e.Name,
+                MuscleGroup = e.MuscleGroup,
+                Sets = e.Sets,
+                Reps = e.Reps,
+                RestSeconds = e.RestSeconds,
+                MediaUrl = e.MediaUrl,
+                WorkoutId = e.WorkoutId
+            })
+            .SingleOrDefault(e => e.Id == id);
+
+        if (exercise == null)
+        {
+            return NotFound();
+        }
+
+        return View(exercise);
+    }
+
+    [HttpPost]
+    public IActionResult Edit(ExerciseEditInputModel inputExercise)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(inputExercise);
+        }
+
+        Exercise? exercise = dbContext.Exercises.Find(inputExercise.Id);
+        if (exercise == null)
+        {
+            return NotFound();
+        }
+
+        exercise.Name = inputExercise.Name;
+        exercise.MuscleGroup = inputExercise.MuscleGroup;
+        exercise.Sets = inputExercise.Sets;
+        exercise.Reps = inputExercise.Reps;
+        exercise.RestSeconds = inputExercise.RestSeconds;
+        exercise.MediaUrl = inputExercise.MediaUrl;
+
+        dbContext.SaveChanges();
+
+        return RedirectToAction(nameof(Details), new { id = exercise.Id });
+    }
 }
