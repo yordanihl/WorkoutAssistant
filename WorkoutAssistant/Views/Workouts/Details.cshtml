@@ -13,13 +13,14 @@
 
         <div class="card shadow-sm">
             <div class="card-body p-4">
-                <div class="d-flex justify-content-end mb-3">
+                <div class="d-flex flex-row gap-1 justify-content-end mb-3">
                     <a asp-controller="WorkoutPlans"
                        asp-action="Details"
                        asp-route-id="@Model.PlanId"
                        class="btn btn-outline-secondary">
                         Back to workout plan
                     </a>
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
                 </div>
 
                 <h2 class="card-title h4">@Model.Name</h2>

@@ -77,5 +77,44 @@ namespace WorkoutAssistant.Web.Controllers
                 nameof(WorkoutPlansController)[..^10],
                 new { id = inputWorkout.PlanId });
         }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            WorkoutEditInputModel? workout = dbContext.Workouts
+                .Select(w => new WorkoutEditInputModel
+                {
+                    Id = w.Id,
+                    Name = w.Name
+                })
+                .SingleOrDefault(w => w.Id == id);
+
+            if (workout == null)
+            {
+                return NotFound();
+            }
+
+            return View(workout);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(WorkoutEditInputModel inputWorkout)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(inputWorkout);
+            }
+
+            Workout? workout = dbContext.Workouts.Find(inputWorkout.Id);
+            if (workout == null)
+            {
+                return BadRequest();
+            }
+
+            workout.Name = inputWorkout.Name;
+            dbContext.SaveChanges();
+
+            return RedirectToAction(nameof(Details), new { id = workout.Id });
+        }
     }
 }
