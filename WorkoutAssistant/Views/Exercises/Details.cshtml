@@ -1,0 +1,54 @@
+@model WorkoutAssistant.Web.ViewModels.Exercise.ExerciseDetailsViewModel
+
+@{
+    ViewData["Title"] = "Exercise Details";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+        <div class="mb-4">
+            <h1 class="h2 mb-1">Exercise Details</h1>
+            <p class="text-muted mb-0">View the details of this exercise.</p>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <div class="d-flex flex-row gap-1 justify-content-end mb-3">
+                    <a asp-controller="Workouts"
+                       asp-action="Details"
+                       asp-route-id="@Model.WorkoutId"
+                       class="btn btn-outline-secondary">
+                        Back to workout
+                    </a>
+                </div>
+
+                <h2 class="card-title h4">@Model.Name</h2>
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Workout</dt>
+                    <dd class="col-sm-8">
+                        <a asp-controller="Workouts"
+                           asp-action="Details"
+                           asp-route-id="@Model.WorkoutId">
+                            @Model.WorkoutName
+                        </a>
+                    </dd>
+                    <dt class="col-sm-4">Muscle group</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.MuscleGroup)</dd>
+                    <dt class="col-sm-4">Sets</dt>
+                    <dd class="col-sm-8">@Model.Sets</dd>
+                    <dt class="col-sm-4">Reps per set</dt>
+                    <dd class="col-sm-8">@Model.Reps</dd>
+                    <dt class="col-sm-4">Rest</dt>
+                    <dd class="col-sm-8">@Model.RestSeconds seconds</dd>
+                    @if (!string.IsNullOrWhiteSpace(Model.MediaUrl))
+                    {
+                        <dt class="col-sm-4">Media</dt>
+                        <dd class="col-sm-8">
+                            <a href="@Model.MediaUrl" target="_blank" rel="noopener noreferrer">View media</a>
+                        </dd>
+                    }
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

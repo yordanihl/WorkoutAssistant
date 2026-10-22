@@ -9,6 +9,32 @@ namespace WorkoutAssistant.Web.Controllers;
 public class ExercisesController(AppDbContext dbContext) : Controller
 {
     [HttpGet]
+    public IActionResult Details(int id)
+    {
+        ExerciseDetailsViewModel? exercise = dbContext.Exercises
+            .Select(e => new ExerciseDetailsViewModel
+            {
+                Id = e.Id,
+                Name = e.Name,
+                MuscleGroup = e.MuscleGroup,
+                Sets = e.Sets,
+                Reps = e.Reps,
+                RestSeconds = e.RestSeconds,
+                MediaUrl = e.MediaUrl,
+                WorkoutId = e.WorkoutId,
+                WorkoutName = e.Workout.Name
+            })
+            .SingleOrDefault(e => e.Id == id);
+
+        if (exercise == null)
+        {
+            return NotFound();
+        }
+
+        return View(exercise);
+    }
+
+    [HttpGet]
     public IActionResult Add(int workoutId)
     {
         if (!dbContext.Workouts.Any(w => w.Id == workoutId))
