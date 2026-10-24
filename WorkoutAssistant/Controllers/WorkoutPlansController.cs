@@ -1,50 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WorkoutAssistant.Data;
-using WorkoutAssistant.Data.Models;
-using WorkoutAssistant.Web.Models.Workout;
+using Microsoft.AspNetCore.Mvc;
+using WorkoutAssistant.Services.Core.Contracts;
 using WorkoutAssistant.Web.Models.WorkoutPlan;
 
 namespace WorkoutAssistant.Web.Controllers
 {
-    public class WorkoutPlansController(AppDbContext dbContext) : Controller
+    public class WorkoutPlansController(IWorkoutPlanService workoutPlanService) : Controller
     {
         [HttpGet]
         public IActionResult Index()
         {
-            IEnumerable<WorkoutPlanViewModel> workoutPlans = dbContext.WorkoutPlans
-                .Select(p => new WorkoutPlanViewModel
-                {
-                    Id = p.Id,
-                    Title = p.Title,
-                    Description = p.Description
-                })
-                .OrderBy(p => p.Title)
-                .ThenBy(p => p.Id)
-                .ToList();
-
+            IEnumerable<WorkoutPlanViewModel> workoutPlans = workoutPlanService.GetAll();
             return View(workoutPlans);
         }
 
         [HttpGet]
         public IActionResult Details(int id)
         {
-            WorkoutPlanDetailsViewModel? workoutPlan = dbContext.WorkoutPlans
-                .Select(p => new WorkoutPlanDetailsViewModel
-                {
-                    Id = p.Id,
-                    Title = p.Title,
-                    Description = p.Description,
-                    Workouts = p.Workouts
-                        .OrderBy(w => w.OrderPosition)
-                        .Select(w => new WorkoutListViewModel
-                        {
-                            Id = w.Id,
-                            Name = w.Name
-                        })
-                        .ToList()
-                })
-                .SingleOrDefault(p => p.Id == id);
-
+            WorkoutPlanDetailsViewModel? workoutPlan = workoutPlanService.GetDetails(id);
             if (workoutPlan == null)
             {
                 return NotFound();
@@ -56,9 +28,7 @@ namespace WorkoutAssistant.Web.Controllers
         [HttpGet]
         public IActionResult Add()
         {
-            WorkoutPlanAddInputModel workoutPlan = new WorkoutPlanAddInputModel();
-
-            return View(workoutPlan);
+            return View(new WorkoutPlanAddInputModel());
         }
 
         [HttpPost]
@@ -68,38 +38,15 @@ namespace WorkoutAssistant.Web.Controllers
             {
                 return View(inputWorkoutPlan);
             }
-            try
-            {
-                WorkoutPlan newWorkoutPlan = new WorkoutPlan()
-                {
-                    Title = inputWorkoutPlan.Title,
-                    Description = inputWorkoutPlan.Description
-                };
 
-                dbContext.WorkoutPlans.Add(newWorkoutPlan);
-                dbContext.SaveChanges();
-            }
-            catch
-            {
-                TempData["toast"] = "Something went wrong. Try again later.";
-                return RedirectToAction(nameof(Index));
-            }
-
+            workoutPlanService.Add(inputWorkoutPlan);
             return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            WorkoutPlanEditInputModel? workoutPlan = dbContext.WorkoutPlans
-                .Select(p => new WorkoutPlanEditInputModel
-                {
-                    Id = p.Id,
-                    Title = p.Title,
-                    Description= p.Description
-                })
-                .SingleOrDefault(p => p.Id == id);
-
+            WorkoutPlanEditInputModel? workoutPlan = workoutPlanService.GetForEdit(id);
             if (workoutPlan == null)
             {
                 return NotFound();
@@ -115,31 +62,19 @@ namespace WorkoutAssistant.Web.Controllers
             {
                 return View(inputWorkoutPlan);
             }
-            WorkoutPlan? workoutPlan = dbContext.WorkoutPlans.Find(inputWorkoutPlan.Id);
-            if (workoutPlan == null)
+
+            if (!workoutPlanService.Update(inputWorkoutPlan))
             {
                 return BadRequest();
             }
-            workoutPlan.Title = inputWorkoutPlan.Title;
-            workoutPlan.Description = inputWorkoutPlan.Description;
 
-            dbContext.SaveChanges();
-
-            return RedirectToAction(nameof(Details), new { id = workoutPlan.Id });
+            return RedirectToAction(nameof(Details), new { id = inputWorkoutPlan.Id });
         }
 
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            WorkoutPlanViewModel? workoutPlan = dbContext.WorkoutPlans
-                .Select(p => new WorkoutPlanViewModel
-                {
-                    Id = p.Id,
-                    Title = p.Title,
-                    Description = p.Description
-                })
-                .SingleOrDefault(p => p.Id == id);
-
+            WorkoutPlanViewModel? workoutPlan = workoutPlanService.GetForDelete(id);
             if (workoutPlan == null)
             {
                 return NotFound();
@@ -151,16 +86,10 @@ namespace WorkoutAssistant.Web.Controllers
         [HttpPost]
         public IActionResult DeleteConfirmed(int id)
         {
-            WorkoutPlan? workoutPlan = dbContext.WorkoutPlans
-                .SingleOrDefault(p => p.Id == id);
-
-            if (workoutPlan == null)
+            if (!workoutPlanService.Delete(id))
             {
                 return BadRequest();
             }
-
-            dbContext.Remove(workoutPlan);
-            dbContext.SaveChanges();
 
             return RedirectToAction(nameof(Index));
         }

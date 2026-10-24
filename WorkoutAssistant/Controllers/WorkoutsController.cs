@@ -1,32 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WorkoutAssistant.Data;
-using WorkoutAssistant.Data.Models;
-using WorkoutAssistant.Web.Models.Exercise;
+using Microsoft.AspNetCore.Mvc;
+using WorkoutAssistant.Services.Core.Contracts;
 using WorkoutAssistant.Web.Models.Workout;
 
 namespace WorkoutAssistant.Web.Controllers
 {
-    public class WorkoutsController(AppDbContext dbContext) : Controller
+    public class WorkoutsController(IWorkoutService workoutService) : Controller
     {
         [HttpGet]
         public IActionResult Details(int id)
         {
-            WorkoutDetailsViewModel? workout = dbContext.Workouts
-                .Select(w => new WorkoutDetailsViewModel
-                {
-                    Id = w.Id,
-                    Name = w.Name,
-                    PlanId = w.PlanId,
-                    Exercises = w.Exercises
-                    .OrderBy(e  => e.Name)
-                    .Select(e => new ExerciseViewModel
-                    {
-                        Id = e.Id,
-                        Name = e.Name
-                    })
-                    .ToList()
-                })
-                .SingleOrDefault(w => w.Id == id);
+            WorkoutDetailsViewModel? workout = workoutService.GetDetails(id);
             if (workout == null)
             {
                 return NotFound();
@@ -38,7 +21,7 @@ namespace WorkoutAssistant.Web.Controllers
         [HttpGet]
         public IActionResult Add(int planId)
         {
-            WorkoutAddInputModel workout = new WorkoutAddInputModel()
+            WorkoutAddInputModel workout = new()
             {
                 PlanId = planId
             };
@@ -53,25 +36,12 @@ namespace WorkoutAssistant.Web.Controllers
             {
                 return View(inputWorkout);
             }
-            try
-            {
-                Workout newWorkout = new Workout()
-                {
-                    Name = inputWorkout.Name,
-                    PlanId = inputWorkout.PlanId
-                };
 
-                dbContext.Workouts.Add(newWorkout);
-                dbContext.SaveChanges();
-            }
-            catch
+            if (!workoutService.Add(inputWorkout))
             {
                 TempData["toast"] = "Something went wrong. Try again later.";
-                return RedirectToAction(
-                    nameof(WorkoutPlansController.Details),
-                    nameof(WorkoutPlansController)[..^10],
-                    new { id = inputWorkout.PlanId });
             }
+
             return RedirectToAction(
                 nameof(WorkoutPlansController.Details),
                 nameof(WorkoutPlansController)[..^10],
@@ -81,14 +51,7 @@ namespace WorkoutAssistant.Web.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            WorkoutEditInputModel? workout = dbContext.Workouts
-                .Select(w => new WorkoutEditInputModel
-                {
-                    Id = w.Id,
-                    Name = w.Name
-                })
-                .SingleOrDefault(w => w.Id == id);
-
+            WorkoutEditInputModel? workout = workoutService.GetForEdit(id);
             if (workout == null)
             {
                 return NotFound();
@@ -105,29 +68,18 @@ namespace WorkoutAssistant.Web.Controllers
                 return View(inputWorkout);
             }
 
-            Workout? workout = dbContext.Workouts.Find(inputWorkout.Id);
-            if (workout == null)
+            if (!workoutService.Update(inputWorkout))
             {
                 return BadRequest();
             }
 
-            workout.Name = inputWorkout.Name;
-            dbContext.SaveChanges();
-
-            return RedirectToAction(nameof(Details), new { id = workout.Id });
+            return RedirectToAction(nameof(Details), new { id = inputWorkout.Id });
         }
 
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            WorkoutListViewModel? workout = dbContext.Workouts
-                .Select(w => new WorkoutListViewModel
-                {
-                    Id = w.Id,
-                    Name = w.Name
-                })
-                .SingleOrDefault(w => w.Id == id);
-
+            WorkoutListViewModel? workout = workoutService.GetForDelete(id);
             if (workout == null)
             {
                 return NotFound();
@@ -139,17 +91,11 @@ namespace WorkoutAssistant.Web.Controllers
         [HttpPost]
         public IActionResult DeleteConfirmed(int id)
         {
-            Workout? workout = dbContext.Workouts
-                .SingleOrDefault(w => w.Id == id);
-
-            if (workout == null)
+            int? planId = workoutService.Delete(id);
+            if (planId == null)
             {
                 return BadRequest();
             }
-
-            int planId = workout.PlanId;
-            dbContext.Remove(workout);
-            dbContext.SaveChanges();
 
             return RedirectToAction(
                 nameof(WorkoutPlansController.Details),

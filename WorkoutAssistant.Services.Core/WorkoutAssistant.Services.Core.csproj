@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WorkoutAssistant.Data\WorkoutAssistant.Data.csproj" />
     <ProjectReference Include="..\WorkoutAssistant.Shared\WorkoutAssistant.Shared.csproj" />
+    <ProjectReference Include="..\WorkoutAssistant.Web.Models\WorkoutAssistant.Web.Models.csproj" />
   </ItemGroup>
 
 </Project>
