@@ -135,7 +135,7 @@ dotnet ef database update --project .\WorkoutAssistant.Data\WorkoutAssistant.Dat
 dotnet run --project .\WorkoutAssistant\WorkoutAssistant.Web.csproj
 ```
 
-The app will run from the ASP.NET Core project and is typically available at the default development ports provided by ASP.NET Core.
+The app will be available at `https://localhost:7151` or `http://localhost:5056`.
 
 ---
 
