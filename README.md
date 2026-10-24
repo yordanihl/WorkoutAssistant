@@ -102,10 +102,11 @@ git clone https://github.com/yordanihl/WorkoutAssistant.git
 cd WorkoutAssistant
 ```
 
-### 2. Restore dependencies
+### 2. Restore dependencies and tools
 
 ```bash
 dotnet restore
+dotnet tool restore
 ```
 
 ### 3. Update the connection string
