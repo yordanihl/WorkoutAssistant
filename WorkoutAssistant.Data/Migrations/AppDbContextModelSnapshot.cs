@@ -58,6 +58,98 @@ namespace WorkoutAssistant.Data.Migrations
                     b.HasIndex("WorkoutId");
 
                     b.ToTable("Exercises");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            MuscleGroup = 0,
+                            Name = "Push-Up",
+                            Reps = 10,
+                            RestSeconds = 60,
+                            Sets = 3,
+                            WorkoutId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            MuscleGroup = 1,
+                            Name = "Bent-Over Row",
+                            Reps = 10,
+                            RestSeconds = 60,
+                            Sets = 3,
+                            WorkoutId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            MuscleGroup = 2,
+                            Name = "Overhead Press",
+                            Reps = 8,
+                            RestSeconds = 60,
+                            Sets = 3,
+                            WorkoutId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            MuscleGroup = 4,
+                            Name = "Bodyweight Squat",
+                            Reps = 12,
+                            RestSeconds = 60,
+                            Sets = 3,
+                            WorkoutId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            MuscleGroup = 4,
+                            Name = "Glute Bridge",
+                            Reps = 12,
+                            RestSeconds = 45,
+                            Sets = 3,
+                            WorkoutId = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            MuscleGroup = 4,
+                            Name = "Calf Raise",
+                            Reps = 15,
+                            RestSeconds = 45,
+                            Sets = 3,
+                            WorkoutId = 2
+                        },
+                        new
+                        {
+                            Id = 7,
+                            MuscleGroup = 6,
+                            Name = "Dumbbell Deadlift",
+                            Reps = 10,
+                            RestSeconds = 60,
+                            Sets = 3,
+                            WorkoutId = 3
+                        },
+                        new
+                        {
+                            Id = 8,
+                            MuscleGroup = 5,
+                            Name = "Plank",
+                            Reps = 30,
+                            RestSeconds = 45,
+                            Sets = 3,
+                            WorkoutId = 3
+                        },
+                        new
+                        {
+                            Id = 9,
+                            MuscleGroup = 3,
+                            Name = "Dumbbell Curl",
+                            Reps = 12,
+                            RestSeconds = 45,
+                            Sets = 3,
+                            WorkoutId = 3
+                        });
                 });
 
             modelBuilder.Entity("WorkoutAssistant.Data.Models.Workout", b =>
@@ -84,6 +176,29 @@ namespace WorkoutAssistant.Data.Migrations
                     b.HasIndex("PlanId");
 
                     b.ToTable("Workouts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Upper Body",
+                            OrderPosition = 1,
+                            PlanId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Lower Body",
+                            OrderPosition = 2,
+                            PlanId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Full Body",
+                            OrderPosition = 3,
+                            PlanId = 1
+                        });
                 });
 
             modelBuilder.Entity("WorkoutAssistant.Data.Models.WorkoutPlan", b =>
@@ -106,6 +221,14 @@ namespace WorkoutAssistant.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WorkoutPlans");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "A three-day introductory strength plan covering upper body, lower body, and full-body training.",
+                            Title = "Balanced Strength Starter"
+                        });
                 });
 
             modelBuilder.Entity("WorkoutAssistant.Data.Models.Exercise", b =>

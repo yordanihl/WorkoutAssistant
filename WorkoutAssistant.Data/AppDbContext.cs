@@ -13,4 +13,11 @@ public class AppDbContext : DbContext
     public virtual DbSet<WorkoutPlan> WorkoutPlans { get; set; }
     public virtual DbSet<Workout> Workouts { get; set; }
     public virtual DbSet<Exercise> Exercises { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+    }
 }
