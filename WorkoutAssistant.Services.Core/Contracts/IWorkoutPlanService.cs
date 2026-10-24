@@ -4,21 +4,21 @@ namespace WorkoutAssistant.Services.Core.Contracts;
 
 public interface IWorkoutPlanService
 {
-    IEnumerable<WorkoutPlanViewModel> GetAll();
+    Task<IEnumerable<WorkoutPlanViewModel>> GetAllAsync();
 
-    WorkoutPlanDetailsViewModel? GetDetails(int id);
+    Task<WorkoutPlanDetailsViewModel?> GetDetailsAsync(int id);
 
-    WorkoutPlanReorderInputModel? GetForReorder(int id);
+    Task<WorkoutPlanReorderInputModel?> GetForReorderAsync(int id);
 
-    bool ReorderWorkouts(WorkoutPlanReorderInputModel inputWorkoutPlan);
+    Task<bool> ReorderWorkoutsAsync(WorkoutPlanReorderInputModel inputWorkoutPlan);
 
-    void Add(WorkoutPlanAddInputModel inputWorkoutPlan);
+    Task AddAsync(WorkoutPlanAddInputModel inputWorkoutPlan);
 
-    WorkoutPlanEditInputModel? GetForEdit(int id);
+    Task<WorkoutPlanEditInputModel?> GetForEditAsync(int id);
 
-    bool Update(WorkoutPlanEditInputModel inputWorkoutPlan);
+    Task<bool> UpdateAsync(WorkoutPlanEditInputModel inputWorkoutPlan);
 
-    WorkoutPlanViewModel? GetForDelete(int id);
+    Task<WorkoutPlanViewModel?> GetForDeleteAsync(int id);
 
-    bool Delete(int id);
+    Task<bool> DeleteAsync(int id);
 }

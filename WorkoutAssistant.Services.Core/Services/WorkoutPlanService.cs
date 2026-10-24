@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using WorkoutAssistant.Data;
 using WorkoutAssistant.Data.Models;
 using WorkoutAssistant.Services.Core.Contracts;
@@ -9,9 +10,9 @@ namespace WorkoutAssistant.Services.Core.Services;
 
 public class WorkoutPlanService(AppDbContext dbContext) : IWorkoutPlanService
 {
-    public IEnumerable<WorkoutPlanViewModel> GetAll()
+    public async Task<IEnumerable<WorkoutPlanViewModel>> GetAllAsync()
     {
-        return dbContext.WorkoutPlans
+        return await dbContext.WorkoutPlans
             .Select(p => new WorkoutPlanViewModel
             {
                 Id = p.Id,
@@ -20,12 +21,12 @@ public class WorkoutPlanService(AppDbContext dbContext) : IWorkoutPlanService
             })
             .OrderBy(p => p.Title)
             .ThenBy(p => p.Id)
-            .ToList();
+            .ToListAsync();
     }
 
-    public WorkoutPlanDetailsViewModel? GetDetails(int id)
+    public async Task<WorkoutPlanDetailsViewModel?> GetDetailsAsync(int id)
     {
-        return dbContext.WorkoutPlans
+        return await dbContext.WorkoutPlans
             .Select(p => new WorkoutPlanDetailsViewModel
             {
                 Id = p.Id,
@@ -40,12 +41,12 @@ public class WorkoutPlanService(AppDbContext dbContext) : IWorkoutPlanService
                     })
                     .ToList()
             })
-            .SingleOrDefault(p => p.Id == id);
+            .SingleOrDefaultAsync(p => p.Id == id);
     }
 
-    public WorkoutPlanReorderInputModel? GetForReorder(int id)
+    public async Task<WorkoutPlanReorderInputModel?> GetForReorderAsync(int id)
     {
-        return dbContext.WorkoutPlans
+        return await dbContext.WorkoutPlans
             .Select(p => new WorkoutPlanReorderInputModel
             {
                 Id = p.Id,
@@ -59,10 +60,10 @@ public class WorkoutPlanService(AppDbContext dbContext) : IWorkoutPlanService
                 })
                 .ToList()
             })
-            .SingleOrDefault(p => p.Id == id);
+            .SingleOrDefaultAsync(p => p.Id == id);
     }
 
-    public bool ReorderWorkouts(WorkoutPlanReorderInputModel inputWorkoutPlan)
+    public async Task<bool> ReorderWorkoutsAsync(WorkoutPlanReorderInputModel inputWorkoutPlan)
     {
         if (inputWorkoutPlan.Workouts.Count == 0 ||
             inputWorkoutPlan.Workouts.Count > OrderPositionMax)
@@ -70,9 +71,9 @@ public class WorkoutPlanService(AppDbContext dbContext) : IWorkoutPlanService
             return false;
         }
 
-        List<Workout> workouts = dbContext.Workouts
+        List<Workout> workouts = await dbContext.Workouts
             .Where(w => w.PlanId == inputWorkoutPlan.Id)
-            .ToList();
+            .ToListAsync();
 
         if (workouts.Count != inputWorkoutPlan.Workouts.Count ||
             !workouts.Select(w => w.Id).ToHashSet()
@@ -90,11 +91,11 @@ public class WorkoutPlanService(AppDbContext dbContext) : IWorkoutPlanService
             workoutsById[workoutOrder.Id].OrderPosition = workoutOrder.OrderPosition;
         }
 
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
         return true;
     }
 
-    public void Add(WorkoutPlanAddInputModel inputWorkoutPlan)
+    public async Task AddAsync(WorkoutPlanAddInputModel inputWorkoutPlan)
     {
         WorkoutPlan workoutPlan = new()
         {
@@ -103,24 +104,24 @@ public class WorkoutPlanService(AppDbContext dbContext) : IWorkoutPlanService
         };
 
         dbContext.WorkoutPlans.Add(workoutPlan);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
     }
 
-    public WorkoutPlanEditInputModel? GetForEdit(int id)
+    public async Task<WorkoutPlanEditInputModel?> GetForEditAsync(int id)
     {
-        return dbContext.WorkoutPlans
+        return await dbContext.WorkoutPlans
             .Select(p => new WorkoutPlanEditInputModel
             {
                 Id = p.Id,
                 Title = p.Title,
                 Description = p.Description
             })
-            .SingleOrDefault(p => p.Id == id);
+            .SingleOrDefaultAsync(p => p.Id == id);
     }
 
-    public bool Update(WorkoutPlanEditInputModel inputWorkoutPlan)
+    public async Task<bool> UpdateAsync(WorkoutPlanEditInputModel inputWorkoutPlan)
     {
-        WorkoutPlan? workoutPlan = dbContext.WorkoutPlans.Find(inputWorkoutPlan.Id);
+        WorkoutPlan? workoutPlan = await dbContext.WorkoutPlans.FindAsync(inputWorkoutPlan.Id);
         if (workoutPlan == null)
         {
             return false;
@@ -128,33 +129,33 @@ public class WorkoutPlanService(AppDbContext dbContext) : IWorkoutPlanService
 
         workoutPlan.Title = inputWorkoutPlan.Title;
         workoutPlan.Description = inputWorkoutPlan.Description;
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
         return true;
     }
 
-    public WorkoutPlanViewModel? GetForDelete(int id)
+    public async Task<WorkoutPlanViewModel?> GetForDeleteAsync(int id)
     {
-        return dbContext.WorkoutPlans
+        return await dbContext.WorkoutPlans
             .Select(p => new WorkoutPlanViewModel
             {
                 Id = p.Id,
                 Title = p.Title,
                 Description = p.Description
             })
-            .SingleOrDefault(p => p.Id == id);
+            .SingleOrDefaultAsync(p => p.Id == id);
     }
 
-    public bool Delete(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        WorkoutPlan? workoutPlan = dbContext.WorkoutPlans
-            .SingleOrDefault(p => p.Id == id);
+        WorkoutPlan? workoutPlan = await dbContext.WorkoutPlans
+            .SingleOrDefaultAsync(p => p.Id == id);
         if (workoutPlan == null)
         {
             return false;
         }
 
         dbContext.Remove(workoutPlan);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
         return true;
     }
 }

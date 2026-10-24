@@ -4,15 +4,15 @@ namespace WorkoutAssistant.Services.Core.Contracts;
 
 public interface IExerciseService
 {
-    ExerciseDetailsViewModel? GetDetails(int id);
+    Task<ExerciseDetailsViewModel?> GetDetailsAsync(int id);
 
-    bool WorkoutExists(int workoutId);
+    Task<bool> WorkoutExistsAsync(int workoutId);
 
-    void Add(ExerciseAddInputModel inputExercise);
+    Task AddAsync(ExerciseAddInputModel inputExercise);
 
-    ExerciseEditInputModel? GetForEdit(int id);
+    Task<ExerciseEditInputModel?> GetForEditAsync(int id);
 
-    bool Update(ExerciseEditInputModel inputExercise);
+    Task<bool> UpdateAsync(ExerciseEditInputModel inputExercise);
 
-    int? Delete(int id);
+    Task<int?> DeleteAsync(int id);
 }

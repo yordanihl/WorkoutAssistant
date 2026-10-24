@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using WorkoutAssistant.Data;
 using WorkoutAssistant.Data.Models;
 using WorkoutAssistant.Services.Core.Contracts;
@@ -8,9 +9,9 @@ namespace WorkoutAssistant.Services.Core.Services;
 
 public class WorkoutService(AppDbContext dbContext) : IWorkoutService
 {
-    public WorkoutDetailsViewModel? GetDetails(int id)
+    public async Task<WorkoutDetailsViewModel?> GetDetailsAsync(int id)
     {
-        return dbContext.Workouts
+        return await dbContext.Workouts
             .Select(w => new WorkoutDetailsViewModel
             {
                 Id = w.Id,
@@ -25,20 +26,20 @@ public class WorkoutService(AppDbContext dbContext) : IWorkoutService
                     })
                     .ToList()
             })
-            .SingleOrDefault(w => w.Id == id);
+            .SingleOrDefaultAsync(w => w.Id == id);
     }
 
-    public bool Add(WorkoutAddInputModel inputWorkout)
+    public async Task<bool> AddAsync(WorkoutAddInputModel inputWorkout)
     {
-        if (!dbContext.WorkoutPlans.Any(p => p.Id == inputWorkout.PlanId))
+        if (!await dbContext.WorkoutPlans.AnyAsync(p => p.Id == inputWorkout.PlanId))
         {
             return false;
         }
 
-        int orderPosition = dbContext.Workouts
+        int orderPosition = (await dbContext.Workouts
             .Where(w => w.PlanId == inputWorkout.PlanId)
             .Select(w => (int?)w.OrderPosition)
-            .Max() ?? 0;
+            .MaxAsync()) ?? 0;
 
         Workout workout = new()
         {
@@ -48,48 +49,48 @@ public class WorkoutService(AppDbContext dbContext) : IWorkoutService
         };
 
         dbContext.Workouts.Add(workout);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
         return true;
     }
 
-    public WorkoutEditInputModel? GetForEdit(int id)
+    public async Task<WorkoutEditInputModel?> GetForEditAsync(int id)
     {
-        return dbContext.Workouts
+        return await dbContext.Workouts
             .Select(w => new WorkoutEditInputModel
             {
                 Id = w.Id,
                 Name = w.Name
             })
-            .SingleOrDefault(w => w.Id == id);
+            .SingleOrDefaultAsync(w => w.Id == id);
     }
 
-    public bool Update(WorkoutEditInputModel inputWorkout)
+    public async Task<bool> UpdateAsync(WorkoutEditInputModel inputWorkout)
     {
-        Workout? workout = dbContext.Workouts.Find(inputWorkout.Id);
+        Workout? workout = await dbContext.Workouts.FindAsync(inputWorkout.Id);
         if (workout == null)
         {
             return false;
         }
 
         workout.Name = inputWorkout.Name;
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
         return true;
     }
 
-    public WorkoutListViewModel? GetForDelete(int id)
+    public async Task<WorkoutListViewModel?> GetForDeleteAsync(int id)
     {
-        return dbContext.Workouts
+        return await dbContext.Workouts
             .Select(w => new WorkoutListViewModel
             {
                 Id = w.Id,
                 Name = w.Name
             })
-            .SingleOrDefault(w => w.Id == id);
+            .SingleOrDefaultAsync(w => w.Id == id);
     }
 
-    public int? Delete(int id)
+    public async Task<int?> DeleteAsync(int id)
     {
-        Workout? workout = dbContext.Workouts.SingleOrDefault(w => w.Id == id);
+        Workout? workout = await dbContext.Workouts.SingleOrDefaultAsync(w => w.Id == id);
         if (workout == null)
         {
             return null;
@@ -97,7 +98,7 @@ public class WorkoutService(AppDbContext dbContext) : IWorkoutService
 
         int planId = workout.PlanId;
         dbContext.Remove(workout);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
 
         return planId;
     }

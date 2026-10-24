@@ -7,16 +7,16 @@ namespace WorkoutAssistant.Web.Controllers
     public class WorkoutPlansController(IWorkoutPlanService workoutPlanService) : Controller
     {
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            IEnumerable<WorkoutPlanViewModel> workoutPlans = workoutPlanService.GetAll();
+            IEnumerable<WorkoutPlanViewModel> workoutPlans = await workoutPlanService.GetAllAsync();
             return View(workoutPlans);
         }
 
         [HttpGet]
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            WorkoutPlanDetailsViewModel? workoutPlan = workoutPlanService.GetDetails(id);
+            WorkoutPlanDetailsViewModel? workoutPlan = await workoutPlanService.GetDetailsAsync(id);
             if (workoutPlan == null)
             {
                 return NotFound();
@@ -26,9 +26,9 @@ namespace WorkoutAssistant.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult ReorderWorkouts(int id)
+        public async Task<IActionResult> ReorderWorkouts(int id)
         {
-            WorkoutPlanReorderInputModel? workoutPlan = workoutPlanService.GetForReorder(id);
+            WorkoutPlanReorderInputModel? workoutPlan = await workoutPlanService.GetForReorderAsync(id);
             if (workoutPlan == null)
             {
                 return NotFound();
@@ -42,14 +42,14 @@ namespace WorkoutAssistant.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult ReorderWorkouts(WorkoutPlanReorderInputModel inputWorkoutPlan)
+        public async Task<IActionResult> ReorderWorkouts(WorkoutPlanReorderInputModel inputWorkoutPlan)
         {
             if (!ModelState.IsValid)
             {
                 return View(inputWorkoutPlan);
             }
 
-            if (!workoutPlanService.ReorderWorkouts(inputWorkoutPlan))
+            if (!await workoutPlanService.ReorderWorkoutsAsync(inputWorkoutPlan))
             {
                 return BadRequest();
             }
@@ -64,21 +64,21 @@ namespace WorkoutAssistant.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(WorkoutPlanAddInputModel inputWorkoutPlan)
+        public async Task<IActionResult> Add(WorkoutPlanAddInputModel inputWorkoutPlan)
         {
             if (!ModelState.IsValid)
             {
                 return View(inputWorkoutPlan);
             }
 
-            workoutPlanService.Add(inputWorkoutPlan);
+            await workoutPlanService.AddAsync(inputWorkoutPlan);
             return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            WorkoutPlanEditInputModel? workoutPlan = workoutPlanService.GetForEdit(id);
+            WorkoutPlanEditInputModel? workoutPlan = await workoutPlanService.GetForEditAsync(id);
             if (workoutPlan == null)
             {
                 return NotFound();
@@ -88,14 +88,14 @@ namespace WorkoutAssistant.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(WorkoutPlanEditInputModel inputWorkoutPlan)
+        public async Task<IActionResult> Edit(WorkoutPlanEditInputModel inputWorkoutPlan)
         {
             if (!ModelState.IsValid)
             {
                 return View(inputWorkoutPlan);
             }
 
-            if (!workoutPlanService.Update(inputWorkoutPlan))
+            if (!await workoutPlanService.UpdateAsync(inputWorkoutPlan))
             {
                 return BadRequest();
             }
@@ -104,9 +104,9 @@ namespace WorkoutAssistant.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            WorkoutPlanViewModel? workoutPlan = workoutPlanService.GetForDelete(id);
+            WorkoutPlanViewModel? workoutPlan = await workoutPlanService.GetForDeleteAsync(id);
             if (workoutPlan == null)
             {
                 return NotFound();
@@ -116,9 +116,9 @@ namespace WorkoutAssistant.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (!workoutPlanService.Delete(id))
+            if (!await workoutPlanService.DeleteAsync(id))
             {
                 return BadRequest();
             }

@@ -7,9 +7,9 @@ namespace WorkoutAssistant.Web.Controllers;
 public class ExercisesController(IExerciseService exerciseService) : Controller
 {
     [HttpGet]
-    public IActionResult Details(int id)
+    public async Task<IActionResult> Details(int id)
     {
-        ExerciseDetailsViewModel? exercise = exerciseService.GetDetails(id);
+        ExerciseDetailsViewModel? exercise = await exerciseService.GetDetailsAsync(id);
         if (exercise == null)
         {
             return NotFound();
@@ -19,9 +19,9 @@ public class ExercisesController(IExerciseService exerciseService) : Controller
     }
 
     [HttpGet]
-    public IActionResult Add(int workoutId)
+    public async Task<IActionResult> Add(int workoutId)
     {
-        if (!exerciseService.WorkoutExists(workoutId))
+        if (!await exerciseService.WorkoutExistsAsync(workoutId))
         {
             return NotFound();
         }
@@ -30,9 +30,9 @@ public class ExercisesController(IExerciseService exerciseService) : Controller
     }
 
     [HttpPost]
-    public IActionResult Add(ExerciseAddInputModel inputExercise)
+    public async Task<IActionResult> Add(ExerciseAddInputModel inputExercise)
     {
-        if (!exerciseService.WorkoutExists(inputExercise.WorkoutId))
+        if (!await exerciseService.WorkoutExistsAsync(inputExercise.WorkoutId))
         {
             return NotFound();
         }
@@ -42,7 +42,7 @@ public class ExercisesController(IExerciseService exerciseService) : Controller
             return View(inputExercise);
         }
 
-        exerciseService.Add(inputExercise);
+        await exerciseService.AddAsync(inputExercise);
 
         return RedirectToAction(
             nameof(WorkoutsController.Details),
@@ -51,9 +51,9 @@ public class ExercisesController(IExerciseService exerciseService) : Controller
     }
 
     [HttpGet]
-    public IActionResult Edit(int id)
+    public async Task<IActionResult> Edit(int id)
     {
-        ExerciseEditInputModel? exercise = exerciseService.GetForEdit(id);
+        ExerciseEditInputModel? exercise = await exerciseService.GetForEditAsync(id);
         if (exercise == null)
         {
             return NotFound();
@@ -63,14 +63,14 @@ public class ExercisesController(IExerciseService exerciseService) : Controller
     }
 
     [HttpPost]
-    public IActionResult Edit(ExerciseEditInputModel inputExercise)
+    public async Task<IActionResult> Edit(ExerciseEditInputModel inputExercise)
     {
         if (!ModelState.IsValid)
         {
             return View(inputExercise);
         }
 
-        if (!exerciseService.Update(inputExercise))
+        if (!await exerciseService.UpdateAsync(inputExercise))
         {
             return NotFound();
         }
@@ -79,9 +79,9 @@ public class ExercisesController(IExerciseService exerciseService) : Controller
     }
 
     [HttpGet]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        ExerciseDetailsViewModel? exercise = exerciseService.GetDetails(id);
+        ExerciseDetailsViewModel? exercise = await exerciseService.GetDetailsAsync(id);
         if (exercise == null)
         {
             return NotFound();
@@ -91,9 +91,9 @@ public class ExercisesController(IExerciseService exerciseService) : Controller
     }
 
     [HttpPost]
-    public IActionResult DeleteConfirmed(int id)
+    public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        int? workoutId = exerciseService.Delete(id);
+        int? workoutId = await exerciseService.DeleteAsync(id);
         if (workoutId == null)
         {
             return NotFound();
