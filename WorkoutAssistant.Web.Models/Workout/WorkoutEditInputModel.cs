@@ -1,15 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using static WorkoutAssistant.Shared.ValidationConstants.Workout;
 
-namespace WorkoutAssistant.Web.InputModels
+namespace WorkoutAssistant.Web.Models.Workout
 {
-    public class WorkoutAddInputModel
+    public class WorkoutEditInputModel
     {
+        public int Id { get; set; }
+
         [Required]
         [MaxLength(NameMaxLength)]
         public string Name { get; set; } = null!;
-
-        [Required]
-        public int PlanId { get; set; }
     }
 }

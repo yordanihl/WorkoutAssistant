@@ -1,4 +1,4 @@
-namespace WorkoutAssistant.Web.InputModels;
+namespace WorkoutAssistant.Web.Models.Exercise;
 
 public class ExerciseEditInputModel : ExerciseAddInputModel
 {

@@ -1,4 +1,4 @@
-﻿namespace WorkoutAssistant.Web.ViewModels.WorkoutPlan
+﻿namespace WorkoutAssistant.Web.Models.WorkoutPlan
 {
     public class WorkoutPlanViewModel
     {

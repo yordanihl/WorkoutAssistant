@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using WorkoutAssistant.Shared.Enums;
 using static WorkoutAssistant.Shared.ValidationConstants.Exercise;
 
-namespace WorkoutAssistant.Web.InputModels;
+namespace WorkoutAssistant.Web.Models.Exercise;
 
 public class ExerciseAddInputModel
 {

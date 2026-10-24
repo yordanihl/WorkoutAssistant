@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using WorkoutAssistant.Web.ViewModels;
+using WorkoutAssistant.Web.Models;
 
 namespace WorkoutAssistant.Controllers;
 

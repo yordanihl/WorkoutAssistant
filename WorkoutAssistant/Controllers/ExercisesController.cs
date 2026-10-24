@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WorkoutAssistant.Data;
 using WorkoutAssistant.Data.Models;
-using WorkoutAssistant.Web.InputModels;
-using WorkoutAssistant.Web.ViewModels.Exercise;
+using WorkoutAssistant.Web.Models.Exercise;
 
 namespace WorkoutAssistant.Web.Controllers;
 

@@ -1,6 +1,6 @@
-﻿using WorkoutAssistant.Web.ViewModels.Exercise;
+﻿using WorkoutAssistant.Web.Models.Exercise;
 
-namespace WorkoutAssistant.Web.ViewModels.Workout
+namespace WorkoutAssistant.Web.Models.Workout
 {
     public class WorkoutDetailsViewModel
     {

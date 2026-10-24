@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WorkoutAssistant.Services.Core\WorkoutAssistant.Services.Core.csproj" />
     <ProjectReference Include="..\WorkoutAssistant.Shared\WorkoutAssistant.Shared.csproj" />
+    <ProjectReference Include="..\WorkoutAssistant.Web.Models\WorkoutAssistant.Web.Models.csproj" />
   </ItemGroup>
 
 </Project>

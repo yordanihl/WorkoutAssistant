@@ -1,6 +1,6 @@
 using WorkoutAssistant.Shared.Enums;
 
-namespace WorkoutAssistant.Web.ViewModels.Exercise;
+namespace WorkoutAssistant.Web.Models.Exercise;
 
 public class ExerciseDetailsViewModel
 {
