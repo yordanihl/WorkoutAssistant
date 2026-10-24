@@ -26,6 +26,38 @@ namespace WorkoutAssistant.Web.Controllers
         }
 
         [HttpGet]
+        public IActionResult ReorderWorkouts(int id)
+        {
+            WorkoutPlanReorderInputModel? workoutPlan = workoutPlanService.GetForReorder(id);
+            if (workoutPlan == null)
+            {
+                return NotFound();
+            }
+            if (workoutPlan.Workouts.Count < 2)
+            {
+                return BadRequest();
+            }
+
+            return View(workoutPlan);
+        }
+
+        [HttpPost]
+        public IActionResult ReorderWorkouts(WorkoutPlanReorderInputModel inputWorkoutPlan)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(inputWorkoutPlan);
+            }
+
+            if (!workoutPlanService.ReorderWorkouts(inputWorkoutPlan))
+            {
+                return BadRequest();
+            }
+
+            return RedirectToAction(nameof(Details), new { id = inputWorkoutPlan.Id });
+        }
+
+        [HttpGet]
         public IActionResult Add()
         {
             return View(new WorkoutPlanAddInputModel());

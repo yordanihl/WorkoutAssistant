@@ -1,0 +1,94 @@
+@model WorkoutAssistant.Web.Models.WorkoutPlan.WorkoutPlanReorderInputModel
+@using WorkoutAssistant.Web.Models.Workout
+
+@{
+    ViewData["Title"] = "Reorder Workouts";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+        <div class="mb-4">
+            <h1 class="h2 mb-1">Reorder Workouts</h1>
+            <p class="text-muted mb-0">Use the number field arrows to move workouts up or down.</p>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <form asp-action="ReorderWorkouts" method="post">
+                    <input asp-for="Id" type="hidden" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+                    <div class="d-flex flex-column gap-2" id="workout-order-list">
+                        @for (int index = 0; index < Model.Workouts.Count; index++)
+                        {
+                            WorkoutOrderInputModel workout = Model.Workouts[index];
+                            <div class="d-flex align-items-center justify-content-between gap-3 border rounded p-3 workout-order-item"
+                                 style="order: @(-workout.OrderPosition)">
+                                <div>
+                                    <a asp-controller="Workouts"
+                                       asp-action="Details"
+                                       asp-route-id="@workout.Id"
+                                       class="fw-semibold">
+                                        @workout.Name
+                                    </a>
+                                    <input asp-for="Workouts[index].Id" type="hidden" />
+                                    <input asp-for="Workouts[index].Name" type="hidden" />
+                                </div>
+                                <div class="workout-order-position">
+                                    <label asp-for="Workouts[index].OrderPosition" class="form-label mb-1">Order</label>
+                                    <input asp-for="Workouts[index].OrderPosition"
+                                           type="number"
+                                           min="1"
+                                           max="@Model.Workouts.Count"
+                                           step="1"
+                                           inputmode="none"
+                                           autocomplete="off"
+                                           class="form-control workout-order-input" />
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save order</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const orderInputs = [...document.querySelectorAll(".workout-order-input")];
+
+        function updateCssOrder() {
+            orderInputs.forEach((input) => {
+                input.closest(".workout-order-item").style.order = String(-input.valueAsNumber);
+            });
+        }
+
+        orderInputs.forEach((input) => {
+            input.dataset.previousValue = input.value;
+            input.addEventListener("keydown", (event) => event.preventDefault());
+            input.addEventListener("paste", (event) => event.preventDefault());
+            input.addEventListener("drop", (event) => event.preventDefault());
+            input.addEventListener("wheel", (event) => event.preventDefault(), { passive: false });
+            input.addEventListener("input", () => {
+                const newValue = input.valueAsNumber;
+                const previousValue = Number(input.dataset.previousValue);
+                const collidedInput = orderInputs.find((otherInput) =>
+                    otherInput !== input && otherInput.valueAsNumber === newValue);
+
+                if (collidedInput) {
+                    collidedInput.value = String(previousValue);
+                    collidedInput.dataset.previousValue = String(previousValue);
+                }
+
+                input.dataset.previousValue = String(newValue);
+                updateCssOrder();
+            });
+        });
+    </script>
+}

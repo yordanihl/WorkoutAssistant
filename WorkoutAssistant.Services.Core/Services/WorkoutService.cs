@@ -35,10 +35,16 @@ public class WorkoutService(AppDbContext dbContext) : IWorkoutService
             return false;
         }
 
+        int orderPosition = dbContext.Workouts
+            .Where(w => w.PlanId == inputWorkout.PlanId)
+            .Select(w => (int?)w.OrderPosition)
+            .Max() ?? 0;
+
         Workout workout = new()
         {
             Name = inputWorkout.Name,
-            PlanId = inputWorkout.PlanId
+            PlanId = inputWorkout.PlanId,
+            OrderPosition = orderPosition + 1
         };
 
         dbContext.Workouts.Add(workout);

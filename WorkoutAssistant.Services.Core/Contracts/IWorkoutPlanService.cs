@@ -8,6 +8,10 @@ public interface IWorkoutPlanService
 
     WorkoutPlanDetailsViewModel? GetDetails(int id);
 
+    WorkoutPlanReorderInputModel? GetForReorder(int id);
+
+    bool ReorderWorkouts(WorkoutPlanReorderInputModel inputWorkoutPlan);
+
     void Add(WorkoutPlanAddInputModel inputWorkoutPlan);
 
     WorkoutPlanEditInputModel? GetForEdit(int id);
