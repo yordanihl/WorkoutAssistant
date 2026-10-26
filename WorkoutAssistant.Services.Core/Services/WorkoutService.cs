@@ -100,6 +100,18 @@ public class WorkoutService(AppDbContext dbContext) : IWorkoutService
         dbContext.Remove(workout);
         await dbContext.SaveChangesAsync();
 
+        List<Workout> remainingWorkouts = await dbContext.Workouts
+            .Where(w => w.PlanId == planId)
+            .OrderBy(w => w.OrderPosition)
+            .ToListAsync();
+
+        for (int i = 0; i < remainingWorkouts.Count; i++)
+        {
+            remainingWorkouts[i].OrderPosition = i + 1;
+        }
+
+        await dbContext.SaveChangesAsync();
+
         return planId;
     }
 }
