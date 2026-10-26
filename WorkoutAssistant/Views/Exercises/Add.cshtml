@@ -18,41 +18,7 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
                     <input asp-for="WorkoutId" type="hidden" />
 
-                    <div class="mb-3">
-                        <label asp-for="Name" class="form-label">Exercise name</label>
-                        <input asp-for="Name" class="form-control" placeholder="e.g. Bench Press" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="MuscleGroup" class="form-label">Muscle group</label>
-                        <select asp-for="MuscleGroup" asp-items="Html.GetEnumSelectList<MuscleGroup>()" class="form-select"></select>
-                        <span asp-validation-for="MuscleGroup" class="text-danger"></span>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-4 mb-3">
-                            <label asp-for="Sets" class="form-label"></label>
-                            <input asp-for="Sets" class="form-control" />
-                            <span asp-validation-for="Sets" class="text-danger"></span>
-                        </div>
-                        <div class="col-sm-4 mb-3">
-                            <label asp-for="Reps" class="form-label"></label>
-                            <input asp-for="Reps" class="form-control" />
-                            <span asp-validation-for="Reps" class="text-danger"></span>
-                        </div>
-                        <div class="col-sm-4 mb-3">
-                            <label asp-for="RestSeconds" class="form-label">Rest (seconds)</label>
-                            <input asp-for="RestSeconds" class="form-control" />
-                            <span asp-validation-for="RestSeconds" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <label asp-for="MediaUrl" class="form-label">Media URL <span class="text-muted">(optional)</span></label>
-                        <input asp-for="MediaUrl" class="form-control" placeholder="https://example.com/video" />
-                        <span asp-validation-for="MediaUrl" class="text-danger"></span>
-                    </div>
+                    <partial name="_ExerciseFields" model="Model" />
 
                     <div class="d-flex justify-content-end gap-2">
                         <a asp-controller="Workouts"
