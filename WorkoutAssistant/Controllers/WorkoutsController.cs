@@ -30,6 +30,7 @@ namespace WorkoutAssistant.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(WorkoutAddInputModel inputWorkout)
         {
             if (!ModelState.IsValid)
@@ -61,6 +62,7 @@ namespace WorkoutAssistant.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(WorkoutEditInputModel inputWorkout)
         {
             if (!ModelState.IsValid)
@@ -89,6 +91,7 @@ namespace WorkoutAssistant.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             int? planId = await workoutService.DeleteAsync(id);

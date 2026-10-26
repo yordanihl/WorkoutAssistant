@@ -42,6 +42,7 @@ namespace WorkoutAssistant.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ReorderWorkouts(WorkoutPlanReorderInputModel inputWorkoutPlan)
         {
             if (!ModelState.IsValid)
@@ -64,6 +65,7 @@ namespace WorkoutAssistant.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(WorkoutPlanAddInputModel inputWorkoutPlan)
         {
             if (!ModelState.IsValid)
@@ -88,6 +90,7 @@ namespace WorkoutAssistant.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(WorkoutPlanEditInputModel inputWorkoutPlan)
         {
             if (!ModelState.IsValid)
@@ -116,6 +119,7 @@ namespace WorkoutAssistant.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (!await workoutPlanService.DeleteAsync(id))

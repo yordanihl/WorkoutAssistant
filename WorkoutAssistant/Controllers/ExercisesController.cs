@@ -30,6 +30,7 @@ public class ExercisesController(IExerciseService exerciseService) : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Add(ExerciseAddInputModel inputExercise)
     {
         if (!await exerciseService.WorkoutExistsAsync(inputExercise.WorkoutId))
@@ -63,6 +64,7 @@ public class ExercisesController(IExerciseService exerciseService) : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(ExerciseEditInputModel inputExercise)
     {
         if (!ModelState.IsValid)
@@ -91,6 +93,7 @@ public class ExercisesController(IExerciseService exerciseService) : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         int? workoutId = await exerciseService.DeleteAsync(id);
