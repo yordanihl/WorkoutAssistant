@@ -1,0 +1,7 @@
+@model WorkoutAssistant.Web.Models.Workout.WorkoutNameInputModel
+
+<div class="mb-4">
+    <label asp-for="Name" class="form-label">Workout name</label>
+    <input asp-for="Name" class="form-control" placeholder="e.g. Upper Body Strength" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>

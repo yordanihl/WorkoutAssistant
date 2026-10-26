@@ -17,11 +17,7 @@
                     <input asp-for="Id" type="hidden" />
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
 
-                    <div class="mb-4">
-                        <label asp-for="Name" class="form-label">Workout name</label>
-                        <input asp-for="Name" class="form-control" placeholder="e.g. Upper Body Strength" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
+                    <partial name="_WorkoutNameField" model="Model" />
 
                     <div class="d-flex justify-content-end gap-2">
                         <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Cancel</a>
