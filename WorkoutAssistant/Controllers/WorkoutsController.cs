@@ -40,7 +40,13 @@ namespace WorkoutAssistant.Web.Controllers
 
             if (!await workoutService.AddAsync(inputWorkout))
             {
-                TempData["toast"] = "Something went wrong. Try again later.";
+                TempData["ToastMessage"] = "Something went wrong. Try again later.";
+                TempData["ToastType"] = "error";
+            }
+            else
+            {
+                TempData["ToastMessage"] = "Workout added successfully.";
+                TempData["ToastType"] = "success";
             }
 
             return RedirectToAction(
@@ -75,6 +81,8 @@ namespace WorkoutAssistant.Web.Controllers
                 return BadRequest();
             }
 
+            TempData["ToastMessage"] = "Workout updated successfully.";
+            TempData["ToastType"] = "success";
             return RedirectToAction(nameof(Details), new { id = inputWorkout.Id });
         }
 
@@ -100,6 +108,8 @@ namespace WorkoutAssistant.Web.Controllers
                 return BadRequest();
             }
 
+            TempData["ToastMessage"] = "Workout deleted successfully.";
+            TempData["ToastType"] = "success";
             return RedirectToAction(
                 nameof(WorkoutPlansController.Details),
                 nameof(WorkoutPlansController)[..^10],

@@ -45,6 +45,8 @@ public class ExercisesController(IExerciseService exerciseService) : Controller
 
         await exerciseService.AddAsync(inputExercise);
 
+        TempData["ToastMessage"] = "Exercise added successfully.";
+        TempData["ToastType"] = "success";
         return RedirectToAction(
             nameof(WorkoutsController.Details),
             nameof(WorkoutsController)[..^10],
@@ -77,6 +79,8 @@ public class ExercisesController(IExerciseService exerciseService) : Controller
             return NotFound();
         }
 
+        TempData["ToastMessage"] = "Exercise updated successfully.";
+        TempData["ToastType"] = "success";
         return RedirectToAction(nameof(Details), new { id = inputExercise.Id });
     }
 
@@ -102,6 +106,8 @@ public class ExercisesController(IExerciseService exerciseService) : Controller
             return NotFound();
         }
 
+        TempData["ToastMessage"] = "Exercise deleted successfully.";
+        TempData["ToastType"] = "success";
         return RedirectToAction(
             nameof(WorkoutsController.Details),
             nameof(WorkoutsController)[..^10],

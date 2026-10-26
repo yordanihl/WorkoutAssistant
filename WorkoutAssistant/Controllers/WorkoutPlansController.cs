@@ -52,9 +52,13 @@ namespace WorkoutAssistant.Web.Controllers
 
             if (!await workoutPlanService.ReorderWorkoutsAsync(inputWorkoutPlan))
             {
-                return BadRequest();
+                TempData["ToastMessage"] = "Invalid workout order.";
+                TempData["ToastType"] = "error";
+                return RedirectToAction(nameof(Details), new { id = inputWorkoutPlan.Id });
             }
 
+            TempData["ToastMessage"] = "Workouts reordered successfully.";
+            TempData["ToastType"] = "success";
             return RedirectToAction(nameof(Details), new { id = inputWorkoutPlan.Id });
         }
 
@@ -74,6 +78,8 @@ namespace WorkoutAssistant.Web.Controllers
             }
 
             await workoutPlanService.AddAsync(inputWorkoutPlan);
+            TempData["ToastMessage"] = "Workout plan added successfully.";
+            TempData["ToastType"] = "success";
             return RedirectToAction(nameof(Index));
         }
 
@@ -103,6 +109,8 @@ namespace WorkoutAssistant.Web.Controllers
                 return BadRequest();
             }
 
+            TempData["ToastMessage"] = "Workout plan updated successfully.";
+            TempData["ToastType"] = "success";
             return RedirectToAction(nameof(Details), new { id = inputWorkoutPlan.Id });
         }
 
@@ -127,6 +135,8 @@ namespace WorkoutAssistant.Web.Controllers
                 return BadRequest();
             }
 
+            TempData["ToastMessage"] = "Workout plan deleted successfully.";
+            TempData["ToastType"] = "success";
             return RedirectToAction(nameof(Index));
         }
     }
